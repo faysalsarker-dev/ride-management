@@ -5,6 +5,7 @@ interface ResponsePayload<T> {
   success: boolean;
   message: string;
   data?: T | null;
+  
 }
 
 const sendResponse = <T>(res: Response, payload: ResponsePayload<T>) => {
@@ -12,6 +13,7 @@ const sendResponse = <T>(res: Response, payload: ResponsePayload<T>) => {
     success: payload.success,
     message: payload.message,
     data: payload.data ?? null,
+   
   });
 };
 

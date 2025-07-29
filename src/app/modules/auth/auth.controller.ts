@@ -1,15 +1,18 @@
-import { Request, Response, NextFunction } from 'express';
-import { AuthService } from './auth.service';
-import sendResponse from '../../utils/sendResponse';
+import { Request, Response, NextFunction } from "express";
+import { AuthService } from "./auth.service";
+import sendResponse from "../../utils/sendResponse";
+import { generateToken } from "../../utils/jwt";
+import { setCookie } from "../../utils/setCookie";
 
 export const AuthController = {
   register: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user = await AuthService.registerUser(req.body);
+      const { user, token } = await AuthService.registerUser(req.body);
+      setCookie(res, token);
       sendResponse(res, {
         statusCode: 201,
         success: true,
-        message: 'User registered successfully',
+        message: "User registered successfully",
         data: user,
       });
     } catch (error) {
@@ -21,12 +24,11 @@ export const AuthController = {
     try {
       const { email, password } = req.body;
       const { user, token } = await AuthService.loginUser(email, password);
-      res.cookie('token', token, { httpOnly: true, sameSite: 'lax' });
-
+      setCookie(res, token);
       sendResponse(res, {
         statusCode: 200,
         success: true,
-        message: 'Login successful',
+        message: "Login successful",
         data: user,
       });
     } catch (error) {
