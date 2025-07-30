@@ -1,11 +1,11 @@
 export const UserRoles = {
-  RIDER: 'RIDER',
-  DRIVER: 'DRIVER',
-  ADMIN: 'ADMIN',
+  RIDER: 'rider',
+  DRIVER: 'driver',
+  ADMIN: 'admin',
 } as const;
 
 
-export type UserRole = 'RIDER' | 'DRIVER' | 'ADMIN';
+export type UserRole = 'admin' | 'rider' | 'driver';
 
 export interface IUser extends Document {
   name: string;

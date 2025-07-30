@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthService } from "./auth.service";
 import sendResponse from "../../utils/sendResponse";
-import { generateToken } from "../../utils/jwt";
 import { setCookie } from "../../utils/setCookie";
 
 export const AuthController = {
