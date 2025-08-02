@@ -60,6 +60,7 @@ export const RideController = {
 
   cancelRide: catchAsync(async (req: Request, res: Response) => {
     const { rideId } = req.params;
+    console.log(`Cancelling ride with ID: ${rideId} for user role: ${req.user}`);
     const result = await RiderService.cancelRide(rideId, req.user.role, req.user._id);
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -81,9 +82,9 @@ export const RideController = {
   }),
 
   updateRideStatus: catchAsync(async (req: Request, res: Response) => {
-    const { rideId } = req.params;
+  const {     id } = req.params;
     const status  = req.body.status;
-    const result = await RiderService.updateRideStatus(rideId, status);
+    const result = await RiderService.updateRideStatus(id, status);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,

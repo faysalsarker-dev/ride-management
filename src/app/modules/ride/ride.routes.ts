@@ -8,7 +8,7 @@ import { RideController } from './ride.controller';
 const router = express.Router();
 
 router.post(
-  '/',
+  '/request',
   checkAuth([UserRoles.RIDER,UserRoles.ADMIN]),
   validateRequest(createRideSchema),
   RideController.createRide
@@ -63,7 +63,7 @@ router.post(
 );
 
 router.patch(
-  '/:rideId/status',
+  '/:id/status',
   checkAuth([UserRoles.DRIVER]),
   validateRequest(updateRideStatusSchema),
   RideController.updateRideStatus

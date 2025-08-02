@@ -23,7 +23,7 @@ export const checkAuth = (authRoles: string[]) => async (req: Request, res: Resp
         }
 
 
-        req.user = verifiedToken;
+        req.user = verifiedToken._doc;
         next();
 
     } catch (error) {

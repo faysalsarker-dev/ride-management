@@ -24,8 +24,8 @@ app.get("/", (req: Request, res: Response) => {
 })
 
 
+app.use(globalErrorHandler);
 app.use(errorConverter);
 app.use(errorHandler);
-app.use(globalErrorHandler);
 
 export default app;

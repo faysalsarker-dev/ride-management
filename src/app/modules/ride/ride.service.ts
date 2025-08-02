@@ -4,6 +4,7 @@ import { Earning } from '../earnings/earnings.model';
 import { IRide, RideStatus } from './ride.interface';
 import { calculateFare } from '../../utils/calculateFare';
 import { ApiError } from '../../errors/ApiError';
+import { HistoryService } from '../history/history.service';
 
 export const RiderService = {
   createRide: async (payload: Partial<IRide>) => {
@@ -99,7 +100,15 @@ if (isRiderInRide?.status === RideStatus.Requested) {
       new: true,
     });
 
-    
+      if (status === RideStatus.Completed && updatedRide) {
+    await HistoryService.createHistory({
+      rideId: new Types.ObjectId(updatedRide._id),
+      riderId: updatedRide.rider as any,  
+      driverId: updatedRide.driver as any,
+      status: 'COMPLETED',
+      completedAt: new Date(),   
+    });
+  }
 
     return updatedRide;
   },
