@@ -1,5 +1,8 @@
-import { model, Schema } from "mongoose";
-import { IRide } from "./ride.interface";
+
+
+import { Schema, model } from 'mongoose';
+import { IRide } from './ride.interface';
+import { calculateFare } from '../../utils/calculateFare';
 
 const rideSchema = new Schema<IRide>(
   {
@@ -13,6 +16,7 @@ const rideSchema = new Schema<IRide>(
       ref: 'User',
       default: null,
     },
+
     status: {
       type: String,
       enum: [
@@ -26,24 +30,31 @@ const rideSchema = new Schema<IRide>(
       ],
       default: 'requested',
     },
+
     pickupLocation: {
       lat: { type: Number, required: true },
       lng: { type: Number, required: true },
       address: { type: String },
     },
+
     destinationLocation: {
       lat: { type: Number, required: true },
       lng: { type: Number, required: true },
       address: { type: String },
     },
+
     fare: {
       type: Number,
+      default: 0,
     },
-    timestamps: {
-      requestedAt: {
-        type: Date,
-        default: Date.now,
-      },
+
+    cancelledBy: {
+      type: String,
+      enum: ['rider', 'driver', 'admin'],
+    },
+
+    rideTimeline: {
+      requestedAt: { type: Date, default: Date.now },
       acceptedAt: Date,
       pickedUpAt: Date,
       completedAt: Date,
@@ -51,8 +62,31 @@ const rideSchema = new Schema<IRide>(
     },
   },
   {
-    timestamps: true,
+    timestamps: true, 
   }
 );
 
 export const Ride = model<IRide>('Ride', rideSchema);
+
+
+
+rideSchema.pre('save', function (next) {
+  if (!this.isModified('pickupLocation') || !this.isModified('destinationLocation')) {
+    return next();
+  }
+
+  const pickup = this.pickupLocation;
+  const destination = this.destinationLocation;
+
+  const distance = calculateFare(
+    pickup.lat,
+    pickup.lng,
+    destination.lat,
+    destination.lng
+  );
+
+  console.log(`Calculated distance: ${distance} km`);
+  this.fare = Math.ceil(distance * 20);
+
+  next();
+});

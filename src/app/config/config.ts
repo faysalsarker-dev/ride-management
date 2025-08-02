@@ -9,6 +9,7 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(10),
   JWT_EXPIRES_IN: z.string().default('1d'),
   BCRYPT_SALT_ROUNDS: z.string().regex(/^\d+$/).default('10'),
+  GOOGLE_MAPS_API_KEY: z.string(),
 });
 
 const env = envSchema.safeParse(process.env);
@@ -26,4 +27,5 @@ export default {
     expires_in: env.data.JWT_EXPIRES_IN,
   },
   bcrypt_salt_rounds: Number(env.data.BCRYPT_SALT_ROUNDS),
+  google_maps_api_key: env.data.GOOGLE_MAPS_API_KEY,
 };

@@ -4,7 +4,7 @@ import { ApiError } from "../errors/ApiError";
 import { verifyToken } from "../utils/jwt";
 import {  JwtPayload } from 'jsonwebtoken';
 
-export const checkAuth = (authRoles: string) => async (req: Request, res: Response, next: NextFunction) => {
+export const checkAuth = (authRoles: string[]) => async (req: Request, res: Response, next: NextFunction) => {
     try {
         const accessToken = req.cookies.accessToken;
 

@@ -13,8 +13,15 @@ export interface IUser extends Document {
   password: string;
   role: UserRole;
   isBlocked: boolean;
-  isApproved?: boolean;
-  isOnline?: boolean;
+    driverProfile?: {
+    isApproved?: boolean;
+    isOnline?: boolean;
+    vehicleInfo?: {
+      model?: string;
+      licensePlate?: string;
+      color?: string;
+    };
+  }
     comparePassword(candidatePassword: string): Promise<boolean>;
 
 }

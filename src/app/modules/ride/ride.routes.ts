@@ -1,32 +1,74 @@
 import express from 'express';
-import { RideController } from './ride.controller';
 import validateRequest from '../../middleware/validateRequest.middleware';
-import { createRideSchema, updateRideStatusSchema } from './ride.validation';
-import { verifyToken } from '../../utils/jwt';
+import { createRideSchema, updateRideSchema, updateRideStatusSchema } from './ride.validation';
 import { checkAuth } from '../../middleware/CheckAuth';
 import { UserRoles } from '../auth/auth.interface';
-
+import { RideController } from './ride.controller';
 
 const router = express.Router();
 
 router.post(
   '/',
-  checkAuth(UserRoles.RIDER),
-//  validateRequest(createRideSchema),
+  checkAuth([UserRoles.RIDER,UserRoles.ADMIN]),
+  validateRequest(createRideSchema),
   RideController.createRide
 );
 
-router.get('/',  RideController.getAllRides);
-router.get('/:id', RideController.getSingleRide);
+router.get(
+  '/',
+checkAuth([UserRoles.RIDER,UserRoles.ADMIN]),  RideController.getAllRides
+);
+
+router.get(
+  '/available',
+  checkAuth([UserRoles.DRIVER, UserRoles.ADMIN]),
+  RideController.getAvailableRides
+);
+
+
+
+router.get(
+  '/:rideId',
+ checkAuth([UserRoles.RIDER,UserRoles.ADMIN]),
+  RideController.getSingleRide
+);
 
 router.patch(
-  '/:id/status',
-  verifyToken,
+  '/:rideId',
+checkAuth([UserRoles.RIDER,UserRoles.ADMIN]),
+  validateRequest(updateRideSchema),
+  RideController.updateRide
+);
+
+router.delete(
+  '/:rideId',
+  checkAuth([UserRoles.RIDER,UserRoles.ADMIN]),
+  RideController.deleteRide
+);
+
+
+// need to explain 
+router.post(
+  '/:rideId/cancel',
+  checkAuth([UserRoles.RIDER, UserRoles.DRIVER, UserRoles.ADMIN]),
+  RideController.cancelRide
+);
+
+
+
+router.post(
+  '/:rideId/accept',
+  checkAuth([UserRoles.DRIVER]),
+  RideController.acceptRide
+);
+
+router.patch(
+  '/:rideId/status',
+  checkAuth([UserRoles.DRIVER]),
   validateRequest(updateRideStatusSchema),
   RideController.updateRideStatus
 );
 
-router.delete('/:id',   checkAuth(UserRoles.RIDER),
- RideController.deleteRide);
 
-export default  router;
+
+export default router;

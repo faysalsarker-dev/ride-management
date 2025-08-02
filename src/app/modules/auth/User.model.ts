@@ -1,9 +1,12 @@
-import { Schema, model } from 'mongoose';
+
+
+import { Schema, model ,Document} from 'mongoose';
 import { IUser } from './auth.interface';
 import bcrypt from 'bcrypt';
 import config from '../../config/config';
 
-const userSchema = new Schema<IUser>( {
+const userSchema = new Schema<IUser>(
+  {
     name: {
       type: String,
       required: true,
@@ -34,27 +37,33 @@ const userSchema = new Schema<IUser>( {
       default: false,
     },
 
-    isApproved: {
-      type: Boolean,
-      default: false, 
+  
+    driverProfile: {
+      isApproved: {
+        type: Boolean,
+        default: false,
+      },
+      isOnline: {
+        type: Boolean,
+        default: false,
+      },
+      vehicleInfo: {
+        model: { type: String },
+        licensePlate: { type: String },
+        color: { type: String },
+      },
     },
-
-    isOnline: {
-      type: Boolean,
-      default: false,
-    },
-
   },
   {
     timestamps: true,
-  });
+  }
+);
 
 
 
-
-
-userSchema.pre<IUser>('save', async function (next) {
-   const salt = await bcrypt.genSalt(config.bcrypt_salt_rounds || 10);
+userSchema.pre('save', async function (this: Document & IUser, next) {
+  if (!this.isModified('password')) return next();
+  const salt = await bcrypt.genSalt(config.bcrypt_salt_rounds || 10);
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });

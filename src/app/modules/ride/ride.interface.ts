@@ -1,34 +1,55 @@
-import { Types } from "mongoose";
+import { Types } from 'mongoose';
 
-export type RideStatus =
-  | 'requested'
-  | 'accepted'
-  | 'picked_up'
-  | 'in_transit'
-  | 'completed'
-  | 'cancelled_by_rider'
-  | 'cancelled_by_driver';
+export interface ILocation {
+  lat: number;
+  lng: number;
+  address?: string;
+}
 
-export interface IRide extends Document {
+export enum RideStatus {
+  Requested = 'requested',
+  Accepted = 'accepted',
+  PickedUp = 'picked_up',
+  InTransit = 'in_transit',
+  Completed = 'completed',
+  CancelledByRider = 'cancelled_by_rider',
+  CancelledByDriver = 'cancelled_by_driver',
+}
+
+
+
+export interface IRideTimeline {
+  requestedAt?: Date;
+  acceptedAt?: Date;
+  pickedUpAt?: Date;
+  completedAt?: Date;
+  cancelledAt?: Date;
+}
+
+export interface IRide {
+  _id?: string;
+
   rider: Types.ObjectId;
-  driver?: Types.ObjectId;
-  status: RideStatus;
-  pickupLocation: {
-    lat: number;
-    lng: number;
-    address?: string;
-  };
-  destinationLocation: {
-    lat: number;
-    lng: number;
-    address?: string;
-  };
+  driver?: Types.ObjectId | null;
+
+  status:
+    | 'requested'
+    | 'accepted'
+    | 'picked_up'
+    | 'in_transit'
+    | 'completed'
+    | 'cancelled_by_rider'
+    | 'cancelled_by_driver';
+
+  pickupLocation: ILocation;
+  destinationLocation: ILocation;
+
   fare?: number;
-  timestamps: {
-    requestedAt: Date;
-    acceptedAt?: Date;
-    pickedUpAt?: Date;
-    completedAt?: Date;
-    cancelledAt?: Date;
-  };
+
+  cancelledBy?: 'rider' | 'driver' | 'admin';
+
+  rideTimeline?: IRideTimeline;
+
+  createdAt?: Date;
+  updatedAt?: Date;
 }

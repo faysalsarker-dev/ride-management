@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import errorConverter from './app/errors/errorConverter';
 import errorHandler from './app/middleware/errorHandler.middleware';
 import { router } from './app/routes';
+import { globalErrorHandler } from './app/middleware/globalErrorHandler';
 
 
 
@@ -25,5 +26,6 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use(errorConverter);
 app.use(errorHandler);
+app.use(globalErrorHandler);
 
 export default app;
