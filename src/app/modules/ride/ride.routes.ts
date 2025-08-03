@@ -47,7 +47,7 @@ router.delete(
 );
 
 
-// need to explain 
+
 router.post(
   '/:rideId/cancel',
   checkAuth([UserRoles.RIDER, UserRoles.DRIVER, UserRoles.ADMIN]),

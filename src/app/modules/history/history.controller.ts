@@ -65,9 +65,9 @@ sendResponse(res, {
 }),
 
 updateDriverFeedback: catchAsync(async (req: Request, res: Response) => {
-  const { rideId } = req.params;
+  const { driveId } = req.params;
 
-  const updated = await HistoryService.updateDriverFeedback(rideId, req.body,req.user._id);
+  const updated = await HistoryService.updateDriverFeedback(driveId, req.body,req.user._id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

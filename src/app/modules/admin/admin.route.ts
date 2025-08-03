@@ -10,5 +10,6 @@ router.get('/all-drivers',checkAuth([UserRoles.ADMIN]), AdminUserController.getA
 router.get('/user-summary',checkAuth([UserRoles.ADMIN]), AdminUserController.getSummary);
 router.patch('/drivers/approve/:id',checkAuth([UserRoles.ADMIN]), AdminUserController.updateApprovalStatus);
 router.patch('/users/:id',checkAuth([UserRoles.ADMIN]), AdminUserController.updateUserById);
+router.delete('/users/:id',checkAuth([UserRoles.ADMIN]), AdminUserController.deleteUserById);
 
 export default router;

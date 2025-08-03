@@ -1,10 +1,10 @@
 import { Types } from 'mongoose';
 import { Ride } from './Ride.model';
-import { Earning } from '../earnings/earnings.model';
 import { IRide, RideStatus } from './ride.interface';
 import { calculateFare } from '../../utils/calculateFare';
 import { ApiError } from '../../errors/ApiError';
 import { HistoryService } from '../history/history.service';
+import User from '../auth/User.model';
 
 export const RiderService = {
   createRide: async (payload: Partial<IRide>) => {
@@ -146,6 +146,19 @@ if (isRiderInRide?.status === RideStatus.Requested) {
   },
 
   driverAcceptRide: async (rideId: string, driverId: string) => {
+    const isDriverAprooved = await User.findById(
+     driverId
+    );
+if (
+  !isDriverAprooved || 
+  isDriverAprooved.role !== 'driver' ||
+  isDriverAprooved.isBlocked || 
+  !isDriverAprooved.driverProfile?.isApproved
+) {
+  throw new ApiError(403, 'Driver is not approved');
+}
+
+
     const isDriving = await Ride.findOne({
       driver: new Types.ObjectId(driverId),
       status: { $in: [RideStatus.Accepted, RideStatus.PickedUp, RideStatus.InTransit] },

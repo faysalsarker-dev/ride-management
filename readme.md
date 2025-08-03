@@ -1,188 +1,220 @@
+# 🚖 Ride Booking API
 
-```markdown
-# 🚗 Ride Booking API Documentation
+## 🎯 Project Overview
 
-This is the API for a ride booking system. It allows riders to request rides, and drivers to view, accept, update, and complete those rides.
-
-## 🌐 Base URL
-
-```
-
-[http://localhost:5000/api](http://localhost:5000/api)
-
-```
+A **secure, scalable**, and **role-based** REST API for a ride booking platform (like Uber or Pathao), built with **Node.js**, **Express.js**, and **MongoDB**. The system supports three user roles: **Admin**, **Driver**, and **Rider**.
 
 ---
 
-## 🛣️ Ride Endpoints
+## ✅ Features
 
-### ✅ Create a New Ride (Rider)
+### 🔐 Authentication & Roles
+- JWT-based login (stored in **HTTP-only cookies**)
+- Password hashing using bcrypt
+- Roles: `admin`, `driver`, `rider`
+
+### 👥 User Management
+- Register as rider or driver
+- Login and authenticate via JWT
+- Drivers include approval, block status, and vehicle info
+- Admin can approve/block drivers or riders
+
+### 🚘 Ride Management
+- Riders can request, cancel, and view ride history
+- Drivers can accept rides, update ride status, and go online/offline
+- Admin can view/manage all rides
+- Ride status lifecycle with timestamp tracking
+
+### 💬 Feedback & Ratings
+- Rider and driver can submit feedback after a completed ride
+- History is created automatically
+
+---
+
+## 🧩 API Endpoints
+
+### 📌 Authentication
+
+#### 🔹 Register (Rider or Driver)
+**POST** `/api/v1/user/register`
+
+**Body (Rider):**
+```json
+{
+  "role": "rider",
+  "name": "Sarker",
+  "email": "sarker@example.com",
+  "password": "1234567"
+}
 ```
 
-POST /rides
+**Body (Driver):**
+```json
+{
+  "role": "driver",
+  "name": "Faysal Driver",
+  "email": "driver@gmail.com",
+  "password": "123456",
+  "driverProfile": {
+    "vehicleInfo": {
+      "model": "Toyota Prius",
+      "licensePlate": "DHK-4567",
+      "color": "White"
+    }
+  }
+}
+```
 
-````
-**Headers:**  
-`Authorization: Bearer <token>`
+#### 🔹 Login
+**POST** `/api/v1/user/login`
 
-**Body:**
+```json
+{
+  "email": "sarker@example.com",
+  "password": "1234567"
+}
+```
+
+> 🔐 Authenticated via **JWT cookie**
+
+---
+
+### 🚖 Rider Features
+
+#### 🟢 Request Ride
+**POST** `/api/v1/rides/request`
+
 ```json
 {
   "pickupLocation": {
-    "lat": 23.78,
-    "lng": 90.39,
-    "address": "Banani, Dhaka"
+    "lat": 23.8103,
+    "lng": 90.4125,
+    "address": "Gulshan, Dhaka"
   },
   "destinationLocation": {
-    "lat": 23.75,
-    "lng": 90.36,
-    "address": "Gulshan, Dhaka"
+    "lat": 23.7806,
+    "lng": 90.2792,
+    "address": "Dhanmondi, Dhaka"
   }
 }
-````
+```
+> 💰 Fare = 20 per kilometer (calculated automatically)
+
+#### ❌ Cancel Ride
+**POST** `/api/v1/rides/:rideId/cancel`
+
+> Rider can cancel only before driver accepts
+
+#### 📜 Ride History
+**GET** `/api/v1/rides/history`
 
 ---
 
-### 📦 Get All Rides of the Rider
+### 🚗 Driver Features
 
-```
-GET /rides
-```
+#### 🔍 Get Available Rides
+**GET** `/api/v1/rides/available`
 
-**Headers:**
-`Authorization: Bearer <token>`
+#### ✅ Accept a Ride
+**POST** `/api/v1/rides/:rideId/accept`
 
----
-
-### 🚘 Get All Available Rides (for Drivers)
-
-```
-GET /rides/available
-```
-
-**Headers:**
-`Authorization: Bearer <token>`
-
----
-
-### 🔍 Get Single Ride by ID
-
-```
-GET /rides/:rideId
-```
-
-**Headers:**
-`Authorization: Bearer <token>`
-
----
-
-### 🛠️ Update Ride Info
-
-```
-PATCH /rides/:rideId
-```
-
-**Headers:**
-`Authorization: Bearer <token>`
-
-**Body (example):**
+#### 🔄 Update Ride Status
+**PATCH** `/api/v1/rides/:rideId/status`
 
 ```json
 {
-  "status": "accepted",
-  "driver": "driverId_here"
+  "status": "picked_up" // or "in_transit", "completed"
+}
+```
+
+#### 🟢 Set Online/Offline
+**PATCH** `/api/v1/user/online-status`
+
+```json
+{
+  "isOnline": true
+}
+```
+
+#### 💸 View Earnings
+**GET** `/api/v1/driver/earnings`
+
+---
+
+### 💬 Ratings & Feedback
+
+#### Rider → Driver
+**PATCH** `/rider-feedback/:rideId`
+```json
+{
+  "rating": 4,
+  "feedback": "Safe journey"
+}
+```
+
+#### Driver → Rider
+**PATCH** `/driver-feedback/:rideId`
+```json
+{
+  "rating": 5,
+  "feedback": "Polite and on time"
 }
 ```
 
 ---
 
-### 🗑️ Delete a Ride
+### 🛠️ Admin Features
 
-```
-DELETE /rides/:rideId
-```
+#### 👁 View Users
+- **GET** `/all-riders`
+- **GET** `/all-drivers`
 
-**Headers:**
-`Authorization: Bearer <token>`
+#### 🧾 View Ride Summary
+**GET** `/user-summary`
 
----
+#### ✅ Approve Driver
+**PATCH** `/drivers/approve/:id`
 
-### ❌ Cancel a Ride (Rider or Driver)
+#### 🚫 Block/Unblock Users
+**PATCH** `/users/block/:id`
 
-```
-POST /rides/:rideId/cancel
-```
+#### ✏️ Update User
+**PATCH** `/users/:id`
 
-**Headers:**
-`Authorization: Bearer <token>`
-
----
-
-### 🧍‍♂️ Accept a Ride (Driver)
-
-```
-POST /rides/:rideId/accept
-```
-
-**Headers:**
-`Authorization: Bearer <token>`
+#### 🗑 Delete User
+**DELETE** `/users/:id`
 
 ---
 
-### 🔄 Update Ride Status (Driver)
+## 📘 Ride Lifecycle
 
-```
-PATCH /rides/:rideId/status
-```
-
-**Headers:**
-`Authorization: Bearer <token>`
-
-**Body (example):**
-
-```json
-{
-  "status": "in_transit"
-}
+```text
+requested → accepted → picked_up → in_transit → completed
 ```
 
-**Valid status values:**
-
-* accepted
-* picked\_up
-* in\_transit
-* completed
-* cancelled\_by\_rider
-* cancelled\_by\_driver
+Each status update logs a **timestamp**, and cancellation creates a separate state:
+- `cancelled_by_rider`
+- `cancelled_by_driver`
 
 ---
 
-## 🔐 Authentication
+## ❓ Planning Decisions & Answers
 
-All endpoints require JWT authentication.
-Use the token in the header:
-
-```
-Authorization: Bearer <your_token>
-```
-
----
-
-## 🧪 How to Test in Postman
-
-1. Set base URL: `http://localhost:5000/api`
-2. Go to **Authorization** tab, select **Bearer Token**, and paste your token.
-3. Use the endpoints as described above.
-4. Set `Content-Type: application/json` for POST and PATCH requests.
-5. Use correct rideId when testing `/:rideId` endpoints.
+| Question | Answer |
+|---------|--------|
+| 🔁 Ride Matching | Drivers manually accept from available rides |
+| ❌ Cancel Rules | Allowed only before driver accepts |
+| 🧍 Multiple Rides | One active ride per user |
+| 🚫 Suspended Driver | Cannot access ride endpoints |
+| 🚗 Driver Already on Ride | Cannot accept another ride |
+| 🌍 Location Format | Latitude, Longitude, and Address |
+| 📦 User Model | Single model with `role` field and nested `driverProfile` |
+| 🛡 Role Protection | Route guards using JWT + role middleware |
+| 📜 Logging | All ride statuses logged with timestamps |
+| 📊 Reports & Ratings | Ratings + feedback stored per ride, history auto created |
 
 ---
 
-Happy Testing! 🚀
 
-```
 
----
 
-You can copy and paste this into your `README.md` file directly. Let me know if you want the same in Bangla or styled with badges.
-```

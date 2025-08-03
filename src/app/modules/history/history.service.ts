@@ -1,8 +1,6 @@
 import { ApiError } from "../../errors/ApiError";
 import { IHistory } from "./history.interface";
 import { History } from "./History.model";
-import { Types } from "mongoose";
-import { httpStatus } from 'http-status';
 
 export const HistoryService = {
   createHistory: async (payload: IHistory): Promise<IHistory> => {
@@ -41,11 +39,11 @@ export const HistoryService = {
 ): Promise<IHistory | null> => {
   const history = await History.findById(historyId);
   if (!history) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'History not found');
+    throw new ApiError(404, 'History not found');
   }
   
   if (history.riderId.toString() !== userId) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized');
+    throw new ApiError(401, 'Unauthorized');
   }
 
   return History.findByIdAndUpdate(
@@ -64,11 +62,11 @@ updateDriverFeedback: async (
 ): Promise<IHistory | null> => {
   const history = await History.findById(historyId);
   if (!history) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'History not found');
+    throw new ApiError(404, 'History not found');
   }
 
   if (history.driverId?.toString() !== userId) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Unauthorized');
+    throw new ApiError(401, 'Unauthorized');
   }
 
   return History.findByIdAndUpdate(

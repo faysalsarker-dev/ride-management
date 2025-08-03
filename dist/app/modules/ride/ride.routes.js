@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const validateRequest_middleware_1 = __importDefault(require("../../middleware/validateRequest.middleware"));
+const ride_validation_1 = require("./ride.validation");
+const CheckAuth_1 = require("../../middleware/CheckAuth");
+const auth_interface_1 = require("../auth/auth.interface");
+const ride_controller_1 = require("./ride.controller");
+const router = express_1.default.Router();
+router.post('/request', (0, CheckAuth_1.checkAuth)([auth_interface_1.UserRoles.RIDER, auth_interface_1.UserRoles.ADMIN]), (0, validateRequest_middleware_1.default)(ride_validation_1.createRideSchema), ride_controller_1.RideController.createRide);
+router.get('/', (0, CheckAuth_1.checkAuth)([auth_interface_1.UserRoles.RIDER, auth_interface_1.UserRoles.ADMIN]), ride_controller_1.RideController.getAllRides);
+router.get('/available', (0, CheckAuth_1.checkAuth)([auth_interface_1.UserRoles.DRIVER, auth_interface_1.UserRoles.ADMIN]), ride_controller_1.RideController.getAvailableRides);
+router.get('/:rideId', (0, CheckAuth_1.checkAuth)([auth_interface_1.UserRoles.RIDER, auth_interface_1.UserRoles.ADMIN]), ride_controller_1.RideController.getSingleRide);
+router.patch('/:rideId', (0, CheckAuth_1.checkAuth)([auth_interface_1.UserRoles.RIDER, auth_interface_1.UserRoles.ADMIN]), (0, validateRequest_middleware_1.default)(ride_validation_1.updateRideSchema), ride_controller_1.RideController.updateRide);
+router.delete('/:rideId', (0, CheckAuth_1.checkAuth)([auth_interface_1.UserRoles.RIDER, auth_interface_1.UserRoles.ADMIN]), ride_controller_1.RideController.deleteRide);
+router.post('/:rideId/cancel', (0, CheckAuth_1.checkAuth)([auth_interface_1.UserRoles.RIDER, auth_interface_1.UserRoles.DRIVER, auth_interface_1.UserRoles.ADMIN]), ride_controller_1.RideController.cancelRide);
+router.post('/:rideId/accept', (0, CheckAuth_1.checkAuth)([auth_interface_1.UserRoles.DRIVER]), ride_controller_1.RideController.acceptRide);
+router.patch('/:id/status', (0, CheckAuth_1.checkAuth)([auth_interface_1.UserRoles.DRIVER]), (0, validateRequest_middleware_1.default)(ride_validation_1.updateRideStatusSchema), ride_controller_1.RideController.updateRideStatus);
+exports.default = router;

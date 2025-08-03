@@ -17,7 +17,7 @@ router.patch(
 );
 
 router.patch(
-  '/driver-feedback/:rideId',
+  '/driver-feedback/:driveId',
     checkAuth([UserRoles.DRIVER]),
   validateRequest(driverFeedbackSchema),
   HistoryController.updateDriverFeedback

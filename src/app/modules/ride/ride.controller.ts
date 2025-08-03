@@ -6,6 +6,20 @@ import { catchAsync } from '../../utils/catchAsync';
 
 export const RideController = {
   createRide: catchAsync(async (req: Request, res: Response) => {
+    if(req.user.role !== 'rider') {
+      return sendResponse(res, {
+        statusCode: httpStatus.FORBIDDEN,
+        success: false,
+        message: 'Only riders can create rides',
+      });
+    }
+    if(req.user.isBlocked) {
+      return sendResponse(res, {
+        statusCode: httpStatus.FORBIDDEN,
+        success: false,
+        message: 'Your account is blocked',
+      });
+    }
     const result = await RiderService.createRide({ ...req.body, rider: req.user._id });
     sendResponse(res, {
       statusCode: httpStatus.CREATED,
@@ -60,7 +74,6 @@ export const RideController = {
 
   cancelRide: catchAsync(async (req: Request, res: Response) => {
     const { rideId } = req.params;
-    console.log(`Cancelling ride with ID: ${rideId} for user role: ${req.user}`);
     const result = await RiderService.cancelRide(rideId, req.user.role, req.user._id);
     sendResponse(res, {
       statusCode: httpStatus.OK,

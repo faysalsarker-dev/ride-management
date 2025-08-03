@@ -38,9 +38,10 @@ export const AdminUserService = {
       { new: true, runValidators: true }
     );
   },
-
-
-
+deleteUserById: async (userId: string): Promise<IUser | null> => {
+    const deletedUser = await User.findByIdAndDelete(userId);
+    return deletedUser;
+  },
 
   getSummary: async () => {
     const totalRides = await Ride.countDocuments();

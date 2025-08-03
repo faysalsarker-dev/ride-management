@@ -17,7 +17,7 @@ const moduleRoutes: ModuleRoute[] = [
         route: UserRoute
     },
     {
-        path: "/ride",
+        path: "/rides",
         route: RideRoutes
     },
     {

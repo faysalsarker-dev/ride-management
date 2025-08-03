@@ -56,9 +56,18 @@ export const AdminUserController = {
 
 
 
+deleteUserById: catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
 
+    const deletedUser = await AdminUserService.deleteUserById(id);
 
-
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'User deleted successfully',
+      data: deletedUser,
+    });
+  }),
 
   getSummary: catchAsync(async (req: Request, res: Response) => {
 
