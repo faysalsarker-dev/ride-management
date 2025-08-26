@@ -182,5 +182,16 @@ if (
     return Ride.find({ status: RideStatus.Requested })
       .populate('rider', 'name email')
       .sort({ createdAt: -1 });
+  },
+
+  getRideHistory: async (riderId: string) => {
+    return Ride.find({ rider: new Types.ObjectId(riderId) })
+      .populate('driver', 'name email')
+      .sort({ createdAt: 1 });
+  },
+  getDriverHistory: async (driverId: string) => {
+    return Ride.find({ driver: new Types.ObjectId(driverId) })
+      .populate('rider', 'name email')
+      .sort({ createdAt: 1 });
   }
 };

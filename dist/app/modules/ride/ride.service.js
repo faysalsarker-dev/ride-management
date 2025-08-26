@@ -131,5 +131,15 @@ exports.RiderService = {
         return Ride_model_1.Ride.find({ status: ride_interface_1.RideStatus.Requested })
             .populate('rider', 'name email')
             .sort({ createdAt: -1 });
+    },
+    getRideHistory: async (riderId) => {
+        return Ride_model_1.Ride.find({ rider: new mongoose_1.Types.ObjectId(riderId) })
+            .populate('driver', 'name email')
+            .sort({ createdAt: 1 });
+    },
+    getDriverHistory: async (driverId) => {
+        return Ride_model_1.Ride.find({ driver: new mongoose_1.Types.ObjectId(driverId) })
+            .populate('rider', 'name email')
+            .sort({ createdAt: 1 });
     }
 };

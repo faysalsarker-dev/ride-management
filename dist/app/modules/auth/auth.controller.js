@@ -26,6 +26,7 @@ exports.AuthController = {
     login: async (req, res, next) => {
         try {
             const { email, password } = req.body;
+            console.log(email, password);
             const { user, token } = await auth_service_1.AuthService.loginUser(email, password);
             (0, setCookie_1.setCookie)(res, token);
             (0, sendResponse_1.default)(res, {
@@ -38,5 +39,48 @@ exports.AuthController = {
         catch (error) {
             next(error);
         }
+    },
+    logout: async (req, res) => {
+        res.clearCookie("accessToken", {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax"
+        });
+        (0, sendResponse_1.default)(res, {
+            success: true,
+            statusCode: 200,
+            message: "User Logged Out Successfully",
+            data: null,
+        });
+    },
+    me: async (req, res) => {
+        const decodedToken = req.user._id;
+        const result = await auth_service_1.AuthService.getMe(decodedToken);
+        (0, sendResponse_1.default)(res, {
+            success: true,
+            statusCode: 200,
+            message: "Your profile Retrieved Successfully",
+            data: result
+        });
+    },
+    update: async (req, res) => {
+        const decodedToken = req.user._id;
+        const result = await auth_service_1.AuthService.update(decodedToken, req.body);
+        (0, sendResponse_1.default)(res, {
+            success: true,
+            statusCode: 200,
+            message: "Your profile Update Successfully",
+            data: result
+        });
+    },
+    changePassword: async (req, res) => {
+        const decodedToken = req.user._id;
+        const result = await auth_service_1.AuthService.changePassword(decodedToken, req.body);
+        (0, sendResponse_1.default)(res, {
+            success: true,
+            statusCode: 200,
+            message: "Your profile Update Successfully",
+            data: result
+        });
     },
 };

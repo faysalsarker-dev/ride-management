@@ -14,7 +14,7 @@ export const createRideSchema = z.object({
       lng: z.number().min(-180).max(180),
       address: z.string().optional(),
     }),
-   
+    passengers: z.number().optional(),
   }),
 });
 

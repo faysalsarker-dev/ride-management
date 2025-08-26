@@ -28,4 +28,29 @@ exports.AuthService = {
         const token = (0, jwt_1.generateToken)({ ...user, _id: user._id.toString() });
         return { user, token };
     },
+    getMe: async (userId) => {
+        const user = await User_model_1.default.findById(userId);
+        if (!user)
+            throw new ApiError_1.ApiError(404, 'User not found');
+        return user;
+    },
+    update: async (userId, payload) => {
+        const user = await User_model_1.default.findByIdAndUpdate(userId, { $set: payload }, { new: true });
+        if (!user)
+            throw new ApiError_1.ApiError(404, 'User not found');
+        return user;
+    },
+    changePassword: async (userId, payload) => {
+        const { oldPassword, newPassword } = payload;
+        const user = await User_model_1.default.findById(userId);
+        if (!user)
+            throw new ApiError_1.ApiError(404, 'User not found');
+        const isMatch = await user.comparePassword(oldPassword);
+        if (!isMatch) {
+            throw new ApiError_1.ApiError(401, 'Invalid email or password');
+        }
+        user.password = newPassword;
+        await user.save();
+        return user;
+    },
 };

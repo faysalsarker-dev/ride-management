@@ -60,6 +60,7 @@ const rideSchema = new Schema<IRide>(
       completedAt: Date,
       cancelledAt: Date,
     },
+    passengers: { type: Number, default: 1 }
   },
   {
     timestamps: true, 

@@ -25,4 +25,51 @@ export const AuthService = {
     const token = generateToken({...user,_id:user._id.toString()});
     return { user ,token};
   },
+
+
+  
+  getMe: async (userId: string) => {
+    const user = await User.findById(userId);
+    if (!user) throw new ApiError(404, 'User not found');
+    return user;
+  },
+
+
+  update: async (userId: string, payload: Partial<IUser>) => {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $set: payload },
+      { new: true }
+    );
+    if (!user) throw new ApiError(404, 'User not found');
+    return user;
+  },
+
+
+
+
+  changePassword: async (userId: string, payload: { oldPassword: string, newPassword: string }) => {
+
+    const { oldPassword, newPassword } = payload;
+
+    const user = await User.findById(userId);
+    if (!user) throw new ApiError(404, 'User not found');
+
+ const isMatch = await user.comparePassword(oldPassword);
+    if (!isMatch) {
+      throw new ApiError(401, 'Invalid email or password');
+    }
+    user.password = newPassword;
+    await user.save();
+ 
+    return user;
+  },
+
+
+
+
+
+
+
+
 };

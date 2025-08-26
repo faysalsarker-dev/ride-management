@@ -102,6 +102,24 @@ exports.RideController = {
             data: result,
         });
     }),
+    getRideHistory: (0, catchAsync_1.catchAsync)(async (req, res) => {
+        const result = await ride_service_1.RiderService.getRideHistory(req.user._id);
+        (0, sendResponse_1.default)(res, {
+            statusCode: http_status_1.default.OK,
+            success: true,
+            message: 'Ride history fetched successfully!',
+            data: result,
+        });
+    }),
+    getDriverHistory: (0, catchAsync_1.catchAsync)(async (req, res) => {
+        const result = await ride_service_1.RiderService.getDriverHistory(req.user._id);
+        (0, sendResponse_1.default)(res, {
+            statusCode: http_status_1.default.OK,
+            success: true,
+            message: 'Ride history fetched successfully!',
+            data: result,
+        });
+    }),
     getAvailableRides: (0, catchAsync_1.catchAsync)(async (_req, res) => {
         console.log('Fetching available rides...');
         const result = await ride_service_1.RiderService.getAvailableRides();

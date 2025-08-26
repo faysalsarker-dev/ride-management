@@ -25,11 +25,22 @@ router.get(
   RideController.getAvailableRides
 );
 
+router.get(
+  '/history',
+ checkAuth([UserRoles.RIDER,UserRoles.ADMIN]),
+  RideController.getRideHistory
+);
+
+router.get(
+  '/driver-history',
+ checkAuth([UserRoles.DRIVER,UserRoles.ADMIN]),
+  RideController.getDriverHistory
+);
 
 
 router.get(
   '/:rideId',
- checkAuth([UserRoles.RIDER,UserRoles.ADMIN]),
+ checkAuth([UserRoles.RIDER,UserRoles.ADMIN,UserRoles.DRIVER]),
   RideController.getSingleRide
 );
 
@@ -64,7 +75,7 @@ router.post(
 
 router.patch(
   '/:id/status',
-  checkAuth([UserRoles.DRIVER]),
+  checkAuth([UserRoles.DRIVER,UserRoles.RIDER]),
   validateRequest(updateRideStatusSchema),
   RideController.updateRideStatus
 );

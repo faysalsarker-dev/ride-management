@@ -49,7 +49,7 @@ export interface IRide {
   cancelledBy?: 'rider' | 'driver' | 'admin';
 
   rideTimeline?: IRideTimeline;
-
+  passengers?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

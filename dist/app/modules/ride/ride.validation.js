@@ -16,6 +16,7 @@ exports.createRideSchema = zod_1.z.object({
             lng: zod_1.z.number().min(-180).max(180),
             address: zod_1.z.string().optional(),
         }),
+        passengers: zod_1.z.number().optional(),
     }),
 });
 exports.updateRideSchema = zod_1.z.object({
