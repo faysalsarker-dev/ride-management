@@ -40,7 +40,7 @@ exports.AuthController = {
             next(error);
         }
     },
-    logout: async (req, res) => {
+    logout: async (_req, res) => {
         res.clearCookie("accessToken", {
             httpOnly: true,
             secure: false,
@@ -76,6 +76,16 @@ exports.AuthController = {
     changePassword: async (req, res) => {
         const decodedToken = req.user._id;
         const result = await auth_service_1.AuthService.changePassword(decodedToken, req.body);
+        (0, sendResponse_1.default)(res, {
+            success: true,
+            statusCode: 200,
+            message: "Your profile Update Successfully",
+            data: result
+        });
+    },
+    driverOnline: async (req, res) => {
+        const decodedToken = req.user._id;
+        const result = await auth_service_1.AuthService.driverOnline(decodedToken);
         (0, sendResponse_1.default)(res, {
             success: true,
             statusCode: 200,

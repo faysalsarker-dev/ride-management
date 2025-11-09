@@ -55,7 +55,8 @@ export const HistoryController = {
 
 updateRiderFeedback: catchAsync(async (req: Request, res: Response) => {
   const { rideId } = req.params;
-  const updated = await HistoryService.updateRiderFeedback(rideId, req.body,req.user._id);
+  console.log(req.body);
+  const updated = await HistoryService.updateRiderFeedback(rideId, req.body);
 sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -67,7 +68,7 @@ sendResponse(res, {
 updateDriverFeedback: catchAsync(async (req: Request, res: Response) => {
   const { driveId } = req.params;
 
-  const updated = await HistoryService.updateDriverFeedback(driveId, req.body,req.user._id);
+  const updated = await HistoryService.updateDriverFeedback(driveId, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

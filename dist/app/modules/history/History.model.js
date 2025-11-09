@@ -6,9 +6,9 @@ const HistorySchema = new mongoose_1.Schema({
     rideId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Ride', required: true },
     riderId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: true },
     driverId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: true },
-    riderRating: { type: Number, min: 1, max: 5, default: null },
+    riderRating: { type: Number, min: 0, max: 5, default: 0 },
     riderFeedback: { type: String, default: '' },
-    driverRating: { type: Number, min: 1, max: 5, default: null },
+    driverRating: { type: Number, min: 0, max: 5, default: 0 },
     driverFeedback: { type: String, default: '' },
     status: {
         type: String,

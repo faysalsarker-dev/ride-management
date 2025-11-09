@@ -36,7 +36,10 @@ const userSchema = new Schema<IUser>(
       type: Boolean,
       default: false,
     },
-
+emergencyNumber:{
+  type:String,
+  default:''
+},
   
     driverProfile: {
       isApproved: {

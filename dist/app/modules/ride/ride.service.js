@@ -40,13 +40,13 @@ exports.RiderService = {
     },
     getAllRides: async (riderId) => {
         return Ride_model_1.Ride.find({ rider: new mongoose_1.Types.ObjectId(riderId) })
-            .populate('driver', 'name email')
+            .populate('driver', 'name email').populate('rider', 'name email')
             .sort({ createdAt: -1 });
     },
     getSingleRide: async (rideId) => {
         return Ride_model_1.Ride.findOne({
             _id: rideId,
-        }).populate('driver', 'name email');
+        }).populate('driver', 'name email').populate('rider', 'name email');
     },
     updateRide: async (riderId, rideId, updateData) => {
         const ride = await Ride_model_1.Ride.findOneAndUpdate({ _id: rideId, rider: new mongoose_1.Types.ObjectId(riderId) }, updateData, { new: true });
@@ -76,13 +76,15 @@ exports.RiderService = {
             new: true,
         });
         if (status === ride_interface_1.RideStatus.Completed && updatedRide) {
-            await history_service_1.HistoryService.createHistory({
+            const res = await history_service_1.HistoryService.createHistory({
                 rideId: new mongoose_1.Types.ObjectId(updatedRide._id),
                 riderId: updatedRide.rider,
                 driverId: updatedRide.driver,
                 status: 'COMPLETED',
                 completedAt: new Date(),
             });
+            updatedRide.history = res._id;
+            updatedRide.save();
         }
         return updatedRide;
     },
@@ -134,12 +136,12 @@ exports.RiderService = {
     },
     getRideHistory: async (riderId) => {
         return Ride_model_1.Ride.find({ rider: new mongoose_1.Types.ObjectId(riderId) })
-            .populate('driver', 'name email')
+            .populate('driver', 'name email').populate('history')
             .sort({ createdAt: 1 });
     },
     getDriverHistory: async (driverId) => {
         return Ride_model_1.Ride.find({ driver: new mongoose_1.Types.ObjectId(driverId) })
-            .populate('rider', 'name email')
-            .sort({ createdAt: 1 });
+            .populate('rider', 'name email').populate('history')
+            .sort({ createdAt: -1 });
     }
 };

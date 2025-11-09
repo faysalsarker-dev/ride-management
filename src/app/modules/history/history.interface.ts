@@ -3,6 +3,7 @@ import { Types } from 'mongoose';
 
 
 export interface IHistory {
+  _id?: Types.ObjectId;
   rideId: Types.ObjectId;
   riderId: Types.ObjectId;
   driverId: Types.ObjectId;

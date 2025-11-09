@@ -32,6 +32,10 @@ const userSchema = new mongoose_1.Schema({
         type: Boolean,
         default: false,
     },
+    emergencyNumber: {
+        type: String,
+        default: ''
+    },
     driverProfile: {
         isApproved: {
             type: Boolean,

@@ -12,6 +12,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   role: UserRole;
+  emergencyNumber:string;
   isBlocked: boolean;
     driverProfile?: {
     isApproved?: boolean;

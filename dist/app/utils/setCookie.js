@@ -5,8 +5,8 @@ const setCookie = (res, accessToken) => {
     if (accessToken) {
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "none"
+            secure: true,
+            sameSite: "none",
         });
     }
 };

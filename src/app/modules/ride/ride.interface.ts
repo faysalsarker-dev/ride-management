@@ -47,7 +47,7 @@ export interface IRide {
   fare?: number;
 
   cancelledBy?: 'rider' | 'driver' | 'admin';
-
+  history?: Types.ObjectId;
   rideTimeline?: IRideTimeline;
   passengers?: string;
   createdAt?: Date;

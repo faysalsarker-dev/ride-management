@@ -10,8 +10,9 @@ const router = Router();
 router.post('/register', validateRequest(AuthValidation.register), AuthController.register);
 router.post('/login', validateRequest(AuthValidation.login), AuthController.login);
 router.post('/logout', AuthController.logout);
-router.get('/me', checkAuth([...UserRoles.ADMIN,UserRoles.DRIVER,UserRoles.RIDER]), AuthController.me);
-router.put('/update', checkAuth([...UserRoles.ADMIN,UserRoles.DRIVER,UserRoles.RIDER]), AuthController.update);
-router.put('/change-password', checkAuth([...UserRoles.ADMIN,UserRoles.DRIVER,UserRoles.RIDER]), AuthController.changePassword);
+router.get('/me', checkAuth([UserRoles.ADMIN,UserRoles.DRIVER,UserRoles.RIDER]), AuthController.me);
+router.put('/update', checkAuth([UserRoles.ADMIN,UserRoles.DRIVER,UserRoles.RIDER]), AuthController.update);
+router.put('/change-password', checkAuth([UserRoles.ADMIN,UserRoles.DRIVER,UserRoles.RIDER]), AuthController.changePassword);
+router.put('/driver-online', checkAuth([UserRoles.ADMIN,UserRoles.DRIVER,UserRoles.RIDER]), AuthController.driverOnline);
 
 export default router;

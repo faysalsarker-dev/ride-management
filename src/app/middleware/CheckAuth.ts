@@ -18,6 +18,10 @@ export const checkAuth = (authRoles: string[]) => async (req: Request, res: Resp
         if (!verifiedToken) {
             throw new ApiError(403, "Invalid Token")
         }
+
+
+
+
         if (authRoles && !authRoles.includes(verifiedToken._doc.role)) {
             throw new ApiError(403, "You are not authorized to access this resource");
         }

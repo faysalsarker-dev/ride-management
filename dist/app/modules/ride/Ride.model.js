@@ -52,7 +52,13 @@ const rideSchema = new mongoose_1.Schema({
         completedAt: Date,
         cancelledAt: Date,
     },
-    passengers: { type: Number, default: 1 }
+    passengers: { type: Number, default: 1 },
+    history: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'History',
+        required: false,
+        default: null,
+    },
 }, {
     timestamps: true,
 });

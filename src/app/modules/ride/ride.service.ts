@@ -48,14 +48,14 @@ if (isRiderInRide?.status === RideStatus.Requested) {
 
   getAllRides: async (riderId: string) => {
     return Ride.find({ rider: new Types.ObjectId(riderId) })
-      .populate('driver', 'name email')
+      .populate('driver', 'name email').populate('rider','name email')
       .sort({ createdAt: -1 });
   },
 
   getSingleRide: async (rideId: string) => {
     return Ride.findOne({
       _id: rideId,
-    }).populate('driver', 'name email');
+    }).populate('driver', 'name email').populate('rider','name email');
   },
 
   updateRide: async (riderId: string, rideId: string, updateData: Partial<IRide>) => {
@@ -101,13 +101,18 @@ if (isRiderInRide?.status === RideStatus.Requested) {
     });
 
       if (status === RideStatus.Completed && updatedRide) {
-    await HistoryService.createHistory({
+   const res = await HistoryService.createHistory({
       rideId: new Types.ObjectId(updatedRide._id),
       riderId: updatedRide.rider as any,  
       driverId: updatedRide.driver as any,
       status: 'COMPLETED',
       completedAt: new Date(),   
     });
+    updatedRide.history = res._id;
+    updatedRide.save()
+
+
+
   }
 
     return updatedRide;
@@ -186,12 +191,12 @@ if (
 
   getRideHistory: async (riderId: string) => {
     return Ride.find({ rider: new Types.ObjectId(riderId) })
-      .populate('driver', 'name email')
+      .populate('driver', 'name email').populate('history')
       .sort({ createdAt: 1 });
   },
   getDriverHistory: async (driverId: string) => {
     return Ride.find({ driver: new Types.ObjectId(driverId) })
-      .populate('rider', 'name email')
-      .sort({ createdAt: 1 });
+      .populate('rider', 'name email').populate('history')
+      .sort({ createdAt: -1 });
   }
 };

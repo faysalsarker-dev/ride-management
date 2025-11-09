@@ -1,15 +1,21 @@
 import express from 'express';
-import { AdminUserController } from './admin.controller';
+import { AdminController } from './admin.controller';
 import { checkAuth } from '../../middleware/CheckAuth';
 import { UserRoles } from '../auth/auth.interface';
 
+
 const router = express.Router();
 
-router.get('/all-riders',checkAuth([UserRoles.ADMIN]), AdminUserController.getAllUsers);
-router.get('/all-drivers',checkAuth([UserRoles.ADMIN]), AdminUserController.getAllDrivers);
-router.get('/user-summary',checkAuth([UserRoles.ADMIN]), AdminUserController.getSummary);
-router.patch('/drivers/approve/:id',checkAuth([UserRoles.ADMIN]), AdminUserController.updateApprovalStatus);
-router.patch('/users/:id',checkAuth([UserRoles.ADMIN]), AdminUserController.updateUserById);
-router.delete('/users/:id',checkAuth([UserRoles.ADMIN]), AdminUserController.deleteUserById);
+router.get('/users',  AdminController.getUsers);
+router.patch('/users/:id',  AdminController.updateUser);
+router.patch('/users/:id/block',  AdminController.toggleBlock);
+router.patch('/drivers/:id/approval',  AdminController.approveDriver);
+router.delete('/users/:id',  AdminController.deleteUser);
 
-export default router;
+router.get('/rides',  AdminController.getRides);
+router.get('/dashboard',  AdminController.getDashboard);
+
+router.patch('/profile',  AdminController.updateProfile);
+router.patch('/profile/password',  AdminController.updatePassword);
+
+export default  router;

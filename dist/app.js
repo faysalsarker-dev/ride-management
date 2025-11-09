@@ -11,12 +11,12 @@ const errorHandler_middleware_1 = __importDefault(require("./app/middleware/erro
 const routes_1 = require("./app/routes");
 const globalErrorHandler_1 = require("./app/middleware/globalErrorHandler");
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)({ origin: true, credentials: true }));
+app.use((0, cors_1.default)({ origin: ["https://ridex-wheat.vercel.app", "http://localhost:5173"], credentials: true }));
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use("/api/v1", routes_1.router);
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
     res.status(200).json({
         message: "api is working..."
     });

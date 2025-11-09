@@ -38,12 +38,12 @@ export const AuthController = {
 
 
 
-logout: async (req: Request, res: Response) => {
+logout: async (_req: Request, res: Response) => {
   res.clearCookie("accessToken", {
-    httpOnly: true,
-    secure: false,
-    sameSite: "lax"
-  });
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax"
+    })
 
   sendResponse(res, {
     success: true,
@@ -82,6 +82,19 @@ update: async (req: Request, res: Response) => {
 changePassword: async (req: Request, res: Response) => {
   const decodedToken = req.user._id;
   const result = await AuthService.changePassword(decodedToken,req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Your profile Update Successfully",
+    data: result
+  });
+},
+
+
+driverOnline: async (req: Request, res: Response) => {
+  const decodedToken = req.user._id;
+  const result = await AuthService.driverOnline(decodedToken);
 
   sendResponse(res, {
     success: true,

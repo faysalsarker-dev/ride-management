@@ -51,7 +51,8 @@ exports.HistoryController = {
     }),
     updateRiderFeedback: (0, catchAsync_1.catchAsync)(async (req, res) => {
         const { rideId } = req.params;
-        const updated = await history_service_1.HistoryService.updateRiderFeedback(rideId, req.body, req.user._id);
+        console.log(req.body);
+        const updated = await history_service_1.HistoryService.updateRiderFeedback(rideId, req.body);
         (0, sendResponse_1.default)(res, {
             statusCode: http_status_1.default.OK,
             success: true,
@@ -61,7 +62,7 @@ exports.HistoryController = {
     }),
     updateDriverFeedback: (0, catchAsync_1.catchAsync)(async (req, res) => {
         const { driveId } = req.params;
-        const updated = await history_service_1.HistoryService.updateDriverFeedback(driveId, req.body, req.user._id);
+        const updated = await history_service_1.HistoryService.updateDriverFeedback(driveId, req.body);
         (0, sendResponse_1.default)(res, {
             statusCode: http_status_1.default.OK,
             success: true,

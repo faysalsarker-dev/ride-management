@@ -11,15 +11,13 @@ const router = express.Router();
 router.get('/', HistoryController.getAll);
 router.patch(
   '/rider-feedback/:rideId',
-  checkAuth([UserRoles.RIDER]),
-  validateRequest(riderFeedbackSchema),
+  // validateRequest(riderFeedbackSchema),
   HistoryController.updateRiderFeedback
 );
 
 router.patch(
   '/driver-feedback/:driveId',
-    checkAuth([UserRoles.DRIVER]),
-  validateRequest(driverFeedbackSchema),
+  // validateRequest(driverFeedbackSchema),
   HistoryController.updateDriverFeedback
 );
 

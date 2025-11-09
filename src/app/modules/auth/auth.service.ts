@@ -67,6 +67,22 @@ export const AuthService = {
 
 
 
+  driverOnline: async (userId: string) => {
+
+   
+    const user = await User.findById(userId);
+    if (!user || user.role !== "driver") throw new ApiError(404, 'User not found');
+
+    if (user.driverProfile) {
+      user.driverProfile.isOnline = !user.driverProfile.isOnline;
+    }
+    await user.save();
+ 
+    return user;
+  },
+
+
+
 
 
 

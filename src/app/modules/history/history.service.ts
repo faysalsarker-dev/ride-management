@@ -35,45 +35,37 @@ export const HistoryService = {
   updateRiderFeedback: async (
   historyId: string,
   data: { rating: number; feedback?: string },
-  userId: string
 ): Promise<IHistory | null> => {
   const history = await History.findById(historyId);
   if (!history) {
     throw new ApiError(404, 'History not found');
   }
   
-  if (history.riderId.toString() !== userId) {
-    throw new ApiError(401, 'Unauthorized');
-  }
 
-  return History.findByIdAndUpdate(
+
+   const result = await  History.findByIdAndUpdate(
     historyId,
     {
       riderRating: data.rating,
-      riderFeedback: data.feedback,
     },
     { new: true }
   );
+
+  return result 
+
 },
 updateDriverFeedback: async (
   historyId: string,
   data: { rating: number; feedback?: string },
-  userId: string
 ): Promise<IHistory | null> => {
   const history = await History.findById(historyId);
   if (!history) {
     throw new ApiError(404, 'History not found');
   }
-
-  if (history.driverId?.toString() !== userId) {
-    throw new ApiError(401, 'Unauthorized');
-  }
-
   return History.findByIdAndUpdate(
     historyId,
     {
       driverRating: data.rating,
-      driverFeedback: data.feedback,
     },
     { new: true }
   );
